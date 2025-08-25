@@ -18,6 +18,17 @@ const App: React.FC = () => {
                 <h2 className="text-xl font-light text-cyan-400 mt-2">{data.title}</h2>
             </div>
             
+            <div className="mt-8 text-center lg:text-left">
+                <button 
+                    onClick={() => window.print()}
+                    className="w-full lg:w-auto bg-slate-700 hover:bg-slate-600 text-cyan-400 font-bold py-3 px-6 rounded-lg transition-colors duration-300 flex items-center justify-center gap-2 print:hidden"
+                    aria-label="Download Resume as PDF"
+                >
+                    <DocumentDownloadIcon className="w-5 h-5" />
+                    <span>Download Resume</span>
+                </button>
+            </div>
+            
             <div className="mt-10 space-y-8">
               <SidebarSection title="Contact">
                 <div className="space-y-3">
@@ -61,17 +72,17 @@ const App: React.FC = () => {
               </MainSection>
 
               <MainSection title="Experience">
-                <div className="space-y-8">
+                <div>
                   {data.experience.map((exp, index) => (
-                    <ExperienceItem key={index} experience={exp} />
+                    <ExperienceItem key={index} experience={exp} isLast={index === data.experience.length - 1} />
                   ))}
                 </div>
               </MainSection>
               
               <MainSection title="Education">
-                <div className="space-y-6">
+                <div>
                   {data.education.map((edu, index) => (
-                    <EducationItem key={index} education={edu} />
+                    <EducationItem key={index} education={edu} isLast={index === data.education.length - 1} />
                   ))}
                 </div>
               </MainSection>
@@ -153,7 +164,7 @@ const LanguageItem: React.FC<{ language: Language }> = ({ language }) => (
 );
 
 // Main Content Components
-const ExperienceItem: React.FC<{ experience: Experience }> = ({ experience }) => (
+const ExperienceItem: React.FC<{ experience: Experience; isLast: boolean }> = ({ experience, isLast }) => (
   <div className="flex">
     <div className="flex flex-col items-center mr-4">
       <div>
@@ -161,9 +172,9 @@ const ExperienceItem: React.FC<{ experience: Experience }> = ({ experience }) =>
           <BriefcaseIcon className="text-cyan-600 w-6 h-6"/>
         </div>
       </div>
-      <div className="w-px h-full bg-slate-200"></div>
+      {!isLast && <div className="w-px h-full bg-slate-200"></div>}
     </div>
-    <div className="pb-8">
+    <div className={!isLast ? 'pb-8' : ''}>
       <p className="mb-1 text-xl font-bold text-slate-800">{experience.role}</p>
       <p className="text-md font-semibold text-cyan-700">{experience.company}</p>
       <div className="text-sm text-slate-500 mt-1 flex flex-wrap gap-x-4 gap-y-1">
@@ -178,20 +189,22 @@ const ExperienceItem: React.FC<{ experience: Experience }> = ({ experience }) =>
   </div>
 );
 
-const EducationItem: React.FC<{ education: Education }> = ({ education }) => (
+const EducationItem: React.FC<{ education: Education; isLast: boolean }> = ({ education, isLast }) => (
   <div className="flex">
     <div className="flex flex-col items-center mr-4">
-      <div className="flex items-center justify-center w-10 h-10 bg-cyan-100 rounded-full">
-          <AcademicCapIcon className="text-cyan-600 w-6 h-6"/>
+      <div>
+        <div className="flex items-center justify-center w-10 h-10 bg-cyan-100 rounded-full">
+            <AcademicCapIcon className="text-cyan-600 w-6 h-6"/>
+        </div>
       </div>
+       {!isLast && <div className="w-px h-full bg-slate-200"></div>}
     </div>
-    <div>
-        <p className="text-lg font-bold text-slate-800">{education.degree}</p>
-        <p className="text-md font-semibold text-cyan-700">{education.institution}</p>
-        <div className="text-sm text-slate-500 mt-1 flex items-center">
-            <CalendarIcon className="mr-1.5"/><span>{education.duration}</span>
-            <span className="mx-2">|</span>
-            <LocationMarkerIcon className="mr-1.5 h-4 w-4"/><span>{education.location}</span>
+    <div className={!isLast ? 'pb-8' : ''}>
+        <p className="text-xl font-bold text-slate-800">{education.degree}</p>
+        <p className="text-md font-semibold text-cyan-700 mt-1">{education.institution}</p>
+        <div className="text-sm text-slate-500 mt-2 flex flex-wrap gap-x-4 gap-y-1">
+            <div className="flex items-center"><CalendarIcon className="mr-1.5"/><span>{education.duration}</span></div>
+            <div className="flex items-center"><LocationMarkerIcon className="mr-1.5 h-4 w-4"/><span>{education.location}</span></div>
         </div>
     </div>
   </div>
